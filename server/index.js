@@ -86,6 +86,10 @@ app.get("/api/user/logout", auth, (req, res) => {
   );
 });
 
+app.get("/", (req, res) => {
+  res.json({ hello: "helloooo" });
+});
+
 app.listen(port, () => {
   console.log(`server running port ${port}`);
 });
