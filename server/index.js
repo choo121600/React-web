@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use("/api/user/auth", auth, (req, res) => {
+app.use("/api/users/auth", auth, (req, res) => {
   res.status(200).json({
     id: req._id,
     isAuth: true,
@@ -45,20 +45,20 @@ app.post("/api/users/register", (req, res) => {
   });
 });
 
-app.post("/api/user/login", (req, res) => {
+app.post("/api/users/login", (req, res) => {
   //find email
   User.findOne({ email: req.body.email }, (err, user) => {
     console.log(user);
     if (!user)
       return res.json({
-        loginSuccsess: false,
+        loginSuccess: false,
         message: "Login failed, Please check your email",
       });
     //compare password
     user.comparePassword(req.body.password, (err, isMatched) => {
       if (!isMatched) {
         return res.json({
-          loginSuccsess: false,
+          loginSuccess: false,
           message: "Login failed, Please check your password",
         });
       }
@@ -67,13 +67,13 @@ app.post("/api/user/login", (req, res) => {
     user.generateToken((err, user) => {
       if (err) return res.status(400).send(err);
       res.cookie("x_auth", user.token).status(200).json({
-        loginSuccsess: true,
+        loginSuccess: true,
       });
     });
   });
 });
 
-app.get("/api/user/logout", auth, (req, res) => {
+app.get("/api/users/logout", auth, (req, res) => {
   User.findOneAndUpdate(
     { _id: req.user._id },
     { token: "" },
